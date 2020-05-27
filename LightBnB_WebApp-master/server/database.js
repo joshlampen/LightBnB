@@ -23,7 +23,7 @@ const getUserWithEmail = function(email) {
   return pool.query(`
   SELECT *
   FROM users
-  WHERE email = $1
+  WHERE email = $1;
   `, values)
     .then(res => res.rows[0] ? res.rows[0] : null);
 };
@@ -40,7 +40,7 @@ const getUserWithId = function(id) {
   return pool.query(`
   SELECT *
   FROM users
-  WHERE id = $1
+  WHERE id = $1;
   `, values)
     .then(res => res.rows[0] ? res.rows[0] : null);
 };
@@ -58,7 +58,7 @@ const addUser =  function(user) {
   return pool.query(`
   INSERT INTO users (name, email, password)
   VALUES ($1, $2, $3)
-  RETURNING *
+  RETURNING *;
   `, values)
     .then(res => res.rows[0] ? res.rows[0] : null);
 };
@@ -149,8 +149,6 @@ const getAllProperties = function(options, limit = 10) {
   LIMIT $${queryParams.length};
   `;
 
-  console.log(queryString, queryParams);
-  
   return pool.query(queryString, queryParams)
     .then(res => res.rows);
 };
@@ -163,16 +161,16 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  // const values = [];
-  // for (const key in property) {
-  //   values.push(property[key]);
-  // }
-  
-  // return pool.query(`
-  // INSERT INTO properties (name, email, password)
-  // VALUES ($1, $2, $3)
-  // RETURNING *
-  // `, values)
-  //   .then(res => res.rows[0] ? res.rows[0] : null);
+  const values = [];
+  for (const key in property) {
+    values.push(property[key]);
+  }
+
+  return pool.query(`
+  INSERT INTO properties (title, description, number_of_bedrooms, number_of_bathrooms, parking_spaces, cost_per_night, thumbnail_photo_url, cover_photo_url, street, country, city, province, post_code, owner_id)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  RETURNING *;
+  `, values)
+    .then(res => res.rows[0] ? res.rows[0] : null);
 };
 exports.addProperty = addProperty;
