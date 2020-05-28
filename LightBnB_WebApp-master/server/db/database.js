@@ -163,6 +163,31 @@ module.exports = {
     RETURNING *;
     `, values)
       .then(res => res.rows[0] ? res.rows[0] : null);
+  },
+
+  /**
+  * @param {{}} reservation
+  * @return {Promise<{}>}
+  */
+
+  addReservation: function(reservation) {
+
+    console.log(reservation);
+
+    const values = [];
+    for (const key in reservation) {
+      values.push(reservation[key]);
+    }
+
+    console.log(values);
+
+    return pool.query(`
+    INSERT INTO reservations (property_id, start_date, end_date, guest_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *;
+    `, values)
+      .then(res => res.rows)
+      .catch(e => e);
   }
 };
 

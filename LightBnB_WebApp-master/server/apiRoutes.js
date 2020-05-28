@@ -5,8 +5,8 @@ module.exports = function(router, database) {
     .then(properties => res.send({properties}))
     .catch(e => {
       console.error(e);
-      res.send(e)
-    }); 
+      res.send(e);
+    });
   });
 
   router.get('/reservations', (req, res) => {
@@ -19,7 +19,7 @@ module.exports = function(router, database) {
     .then(reservations => res.send({reservations}))
     .catch(e => {
       console.error(e);
-      res.send(e)
+      res.send(e);
     });
   });
 
@@ -31,8 +31,16 @@ module.exports = function(router, database) {
       })
       .catch(e => {
         console.error(e);
-        res.send(e)
+        res.send(e);
       });
+  });
+
+  router.post('/reservations/new', (req, res) => {
+    console.log(req.body);
+    const userId = req.session.userId;
+    database.addReservation({...req.body, guest_id: userId})
+      .then(output => res.send({message: "Success!"}))
+      .catch(e => res.send(e));
   });
 
   return router;
